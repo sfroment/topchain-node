@@ -3,6 +3,7 @@ package keeper
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
@@ -14,8 +15,6 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
-	"crypto/sha256"
 
 	"github.com/google/uuid"
 )
@@ -49,7 +48,9 @@ func (k msgServer) Challenge(goCtx context.Context, msg *types.MsgChallenge) (*t
 
 	id := uuid.NewString()
 	buf := &bytes.Buffer{}
-	gob.NewEncoder(buf).Encode(hashes)
+	if err := gob.NewEncoder(buf).Encode(hashes); err != nil {
+		return nil, errorsmod.Wrap(err, "failed to encode hashes")
+	}
 
 	k.SetChallenge(ctx, types.Challenge{
 		Id:               id,
