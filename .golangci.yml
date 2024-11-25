@@ -1,0 +1,22 @@
+run:
+  concurrency: 8
+  timeout: 10m
+issues:
+  exclude-files:
+    - ".*\\.pb\\.go$"
+    - ".*\\.pb\\.gw\\.go$"
+    - ".*\\.gen\\.go$"
+    - "_test\\.go$"
+    - ".*doc\\.go$"
+
+linters-settings:
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  misspell:
+    locale: US
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix(topchain)
